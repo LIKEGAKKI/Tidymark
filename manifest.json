@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Tidymark",
+  "version": "0.1.0",
+  "description": "AI 驱动的 Chrome 书签管理扩展：智能分类、语义搜索、冷门书签识别",
+  "permissions": [
+    "bookmarks",
+    "storage",
+    "sidePanel",
+    "downloads"
+  ],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "src/assets/icon-16.png",
+      "48": "src/assets/icon-48.png",
+      "128": "src/assets/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  },
+  "options_page": "src/options/index.html",
+  "icons": {
+    "16": "src/assets/icon-16.png",
+    "48": "src/assets/icon-48.png",
+    "128": "src/assets/icon-128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["src/pages/cold.html", "src/pages/classify.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer components {
+  .input-field {
+    @apply w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+  }
+
+  .btn-secondary {
+    @apply rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-50;
+  }
+}
