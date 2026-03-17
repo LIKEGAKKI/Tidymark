@@ -1,7 +1,7 @@
 # Tidymark
 
 <p align="center">
-  <img src="./tidymark.png" alt="Tidymark cover" width="720" />
+  <img src="./tidymark.png" alt="Tidymark cover" width="50" />
 </p>
 
 <p align="center">
@@ -14,6 +14,24 @@ Tidymark 是一个面向重度书签用户的 Chrome 扩展，目标是解决“
 - AI 智能分类：对用户选定范围内的书签进行重组，支持最多两级分类
 - AI 语义搜索：在浏览器侧边栏中用自然语言找回已收藏书签
 - 冷门书签识别：找出长期未再次使用的书签并支持清理
+
+## 界面预览
+
+### 主功能界面
+
+![Tidymark main page](./img/main.png)
+
+### 配置界面
+
+![Tidymark options page](./img/options.png)
+
+### 轻入口 Popup
+
+![Tidymark popup](./img/popup.png)
+
+### AI 搜索侧边栏
+
+![Tidymark side panel](./img/side_panel.png)
 
 ## 界面形态
 
@@ -57,6 +75,43 @@ Tidymark 采用分工明确的扩展界面结构：
 - 导入恢复包含书签目录结构，不只是插件配置
 - 快照默认保留最近 10 份，超过上限自动淘汰最旧快照
 
+## 怎么使用
+
+### 第一次使用
+
+1. 打开扩展的 `Options` 页面。
+2. 配置你的 `API Endpoint`、`API Key` 和模型名称。
+3. 阅读并确认 AI 数据出站说明。
+4. 回到 `popup`，选择你要使用的功能入口。
+
+### 使用 AI 智能分类
+
+1. 在 `popup` 中进入分类整理页面。
+2. 选择本次要整理的书签范围。
+3. 等待 AI 生成分类结果。
+4. 在分类结果编辑页中调整一级分类和子分类。
+5. 确认无误后应用变更。
+
+### 使用 AI 搜索
+
+1. 在 `popup` 中打开 AI 搜索侧边栏。
+2. 用自然语言描述你要找的书签。
+3. 从结果中直接打开、复制链接或定位到原文件夹。
+
+### 使用冷门书签清理
+
+1. 在 `popup` 中进入冷门书签页。
+2. 按“从未再次使用”或“超过 30/90/180 天未使用”等条件筛选。
+3. 批量选择要清理的书签。
+4. 确认提示后执行删除。
+
+### 使用导入导出与回滚
+
+1. 打开 `Options` 页面。
+2. 在数据管理区域导出当前配置、快照和书签结构。
+3. 需要迁移或恢复时，导入 JSON 文件。
+4. 需要撤销高风险操作时，从快照列表中选择目标版本回滚。
+
 ## 技术栈
 
 - Chrome Extension Manifest V3
@@ -98,7 +153,7 @@ npm install
 npm run dev
 ```
 
-构建产物会输出到 `dist/`，可在 Chrome 扩展管理页中以“加载已解压的扩展程序”方式加载。
+开发模式下会持续构建到 `dist/`。
 
 常用命令：
 
@@ -106,6 +161,28 @@ npm run dev
 npm run build
 npm run preview
 ```
+
+## 添加到浏览器扩展
+
+### 开发环境加载
+
+1. 在项目根目录执行：
+
+```bash
+npm install
+npm run build
+```
+
+2. 打开 Chrome，进入 `chrome://extensions/`。
+3. 打开右上角的“开发者模式”。
+4. 点击“加载已解压的扩展程序”。
+5. 选择项目里的 [dist](/Users/lovegakki/workspace/myself/codespace/web/Tidymark/dist) 目录。
+6. 加载完成后，把 Tidymark 固定到工具栏，方便打开 `popup`。
+
+### 开发时更新
+
+- 如果你在跑 `npm run dev`，修改代码后会重新构建到 `dist/`
+- 回到 `chrome://extensions/` 页面，点击 Tidymark 卡片上的刷新按钮即可重新加载最新版本
 
 ## 当前约束
 
