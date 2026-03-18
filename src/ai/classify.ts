@@ -130,7 +130,7 @@ function buildCategoryGroups(
         .map((sub): CategoryGroup | null => {
           const subBookmarks = subMap.get(sub.name) ?? [];
           return subBookmarks.length > 0
-            ? { name: sub.name, bookmarks: subBookmarks }
+            ? { id: crypto.randomUUID(), name: sub.name, bookmarks: subBookmarks }
             : null;
         })
         .filter((g): g is CategoryGroup => g !== null);
@@ -140,6 +140,7 @@ function buildCategoryGroups(
       if (totalCount === 0) return null;
 
       return {
+        id: crypto.randomUUID(),
         name: s.name,
         bookmarks: directBookmarks,
         ...(subGroups.length > 0 ? { subGroups } : {}),

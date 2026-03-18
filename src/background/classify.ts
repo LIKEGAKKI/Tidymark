@@ -72,18 +72,32 @@ async function applyClassifyResult(
   result: ClassifyResult,
   scopeIds: string[],
 ): Promise<void> {
-  // 确定父级目录
-  const parentId = scopeIds.length === 1 ? scopeIds[0] : '1';
+  // 确定父级目录和清空范围
+  const parentId = scopeIds.length > 0 ? scopeIds[0] : '1';
 
   // 先清空范围内的旧结构
-  if (scopeIds.length > 0) {
+  if (scopeIds.length === 0) {
+    // 全部书签：清空书签栏和其他书签
+    const roots = await chrome.bookmarks.getTree();
+    const rootChildren = roots[0]?.children ?? [];
+    for (const root of rootChildren) {
+      const children = await chrome.bookmarks.getChildren(root.id);
+      for (const child of children) {
+        if (child.url) {
+          await chrome.bookmarks.remove(child.id);
+        } else {
+          await chrome.bookmarks.removeTree(child.id);
+        }
+      }
+    }
+  } else {
     for (const id of scopeIds) {
       const children = await chrome.bookmarks.getChildren(id);
       for (const child of children) {
-        if (child.children) {
-          await chrome.bookmarks.removeTree(child.id);
-        } else {
+        if (child.url) {
           await chrome.bookmarks.remove(child.id);
+        } else {
+          await chrome.bookmarks.removeTree(child.id);
         }
       }
     }

@@ -69,6 +69,7 @@ export interface CategorySkeleton {
 }
 
 export interface CategoryGroup {
+  id: string;
   name: string;
   bookmarks: BookmarkNode[];
   subGroups?: CategoryGroup[];

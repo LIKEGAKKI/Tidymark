@@ -15,9 +15,11 @@ export function ClassifyPage() {
   const [showApplyConfirm, setShowApplyConfirm] = useState(false);
   const [applying, setApplying] = useState(false);
   const [done, setDone] = useState(false);
+  const [scopeLabel, setScopeLabel] = useState('');
 
-  const handleStart = async (folderIds: string[]) => {
+  const handleStart = async (folderIds: string[], label?: string) => {
     setScopeIds(folderIds);
+    setScopeLabel(label ?? (folderIds.length === 0 ? '全部书签' : `已选择 ${folderIds.length} 个文件夹`));
     setStep('generating');
     setError('');
     try {
@@ -36,6 +38,14 @@ export function ClassifyPage() {
 
   const handleApply = async () => {
     if (!result) return;
+
+    const depthError = validateMaxDepth(result);
+    if (depthError) {
+      setError(depthError);
+      setShowApplyConfirm(false);
+      return;
+    }
+
     setApplying(true);
     try {
       await sendMessage('CLASSIFY_APPLY', { result, scopeIds });
@@ -73,6 +83,23 @@ export function ClassifyPage() {
 
       {step === 'editing' && result && !done && (
         <div className="mt-6">
+          {error && (
+            <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              <p className="font-medium">应用失败</p>
+              <p className="mt-1">{error}</p>
+              <p className="mt-1 text-xs text-red-500">
+                {error.includes('快照') ? '未写入任何更改，书签结构未受影响。' : '部分更改可能已写入，建议在设置页检查快照并回滚。'}
+              </p>
+              <button onClick={() => setError('')} className="mt-2 text-xs text-red-400 hover:text-red-600 underline">
+                关闭
+              </button>
+            </div>
+          )}
+
+          <div className="mb-3 rounded-md bg-indigo-50 px-3 py-2 text-xs text-indigo-700">
+            当前范围：{scopeLabel}
+          </div>
+
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">
               共 {result.categories.length} 个分类，{result.uncategorized.length} 个未分类
@@ -121,4 +148,15 @@ export function ClassifyPage() {
       />
     </div>
   );
+}
+
+function validateMaxDepth(result: ClassifyResult): string | null {
+  for (const cat of result.categories) {
+    for (const sub of cat.subGroups ?? []) {
+      if ((sub.subGroups ?? []).length > 0) {
+        return `分类「${cat.name} / ${sub.name}」下存在三级子分类，最多只允许两级结构。`;
+      }
+    }
+  }
+  return null;
 }
